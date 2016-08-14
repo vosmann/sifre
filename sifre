@@ -1,0 +1,28 @@
+#!/bin/bash
+
+LOCAL=/home/user/file
+REMOTE=xxx://yyy/file
+PROG=zzz
+
+LOCAL_MD5_BEFORE=`md5sum $LOCAL`
+
+echo Start: `date +%T` 
+java -jar $PROG $LOCAL
+echo End: `date +%T` 
+TIMESTAMP=`date +%s`
+
+LOCAL_MD5_AFTER=`md5sum $LOCAL`
+echo "md5(p, before)=$LOCAL_MD5_BEFORE"
+echo "md5(p,  after)=$LOCAL_MD5_AFTER"
+
+if [ "$LOCAL_MD5_BEFORE" = "$LOCAL_MD5_AFTER" ]; then
+    echo No change detected.
+    echo Done.
+else
+    echo Change detected.
+    REMOTE_FULL=$REMOTE-$TIMESTAMP
+    #cp $LOCAL $REMOTE_FULL
+    echo Copied to $REMOTE_FULL.
+fi
+
+
